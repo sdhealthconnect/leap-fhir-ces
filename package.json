@@ -1,0 +1,25 @@
+{
+  "name": "leap-fhir-ces",
+  "version": "0.0.1",
+  "description": "LEAP Consent Enforcement Point for FHIR ",
+  "repository": "git@github.com:sdhealthconnect/leap-fhir-ces.git",
+  "private": true,
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest --runInBand --forceExit --coverage"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http-proxy-middleware": "^1.0.4",
+    "lodash": "^4.17.15",
+    "morgan": "^1.10.0",
+    "superagent": "^5.2.2",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "jest": "^26.0.1",
+    "nock": "^12.0.3",
+    "supertest": "^4.0.2"
+  }
+}
