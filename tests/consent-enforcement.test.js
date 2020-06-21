@@ -118,7 +118,6 @@ it("should fetch a bundle and return only the resources which the consent permit
 
   MOCK_CDS.post(CDS_ENDPOINT).reply(200, CDS_PERMIT_RESPONSE);
   MOCK_CDS.post(CDS_ENDPOINT).reply(200, CDS_DENY_RESPONSE);
-  MOCK_CDS.post(CDS_ENDPOINT).reply(200, CDS_PERMIT_RESPONSE);
 
   const res = await request(app)
     .get("/MedicationStatement")
