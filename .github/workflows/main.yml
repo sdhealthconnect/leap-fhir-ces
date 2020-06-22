@@ -1,0 +1,19 @@
+name: CI
+on: [pull_request]
+jobs:
+  build:
+    env:
+      NODE_ENV: test
+      FHIR_SERVER_BASE: https://mock-fhir-server/base
+      UNPROTECTED_RESOURCE_TYPES: Patient
+      CDS_HOST: https://mock-cds
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install # will run `yarn install` command
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: test # will run `yarn test` command
