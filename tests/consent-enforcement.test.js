@@ -112,7 +112,7 @@ it("should fetch a bundle and return only the resources which the consent permit
   const patient1 = require("./fixtures/patient.json");
   const patient2 = require("./fixtures/patient-second.json");
   const medicationBundle = require("./fixtures/medication-statement-bundle.json");
-  MOCK_FHIR_SERVER.get("/Patient/1").times(2).reply(200, patient1);
+  MOCK_FHIR_SERVER.get("/Patient/1").reply(200, patient1);
   MOCK_FHIR_SERVER.get("/Patient/2").reply(200, patient2);
   MOCK_FHIR_SERVER.get("/MedicationStatement").reply(200, medicationBundle);
 
