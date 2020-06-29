@@ -23,9 +23,12 @@ const proxyOptions = {
   selfHandleResponse: true
 };
 
-logger.info(
-  `Starting the proxy.`
-);
+//this is a requirement for gcp
+app.get("/_ah/start", (req, res) => {
+  res.sendStatus(404);
+});
+
+logger.info(`Starting the proxy.`);
 app.use("/", createProxyMiddleware(proxyOptions));
 
 module.exports = app;
