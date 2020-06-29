@@ -9,8 +9,10 @@ const FHIR_SERVER_BASE = process.env.FHIR_SERVER_BASE;
 
 const app = express();
 
+app.set("trust proxy", true);
+
 //middlewares
-app.use(morgan("dev"));
+process.env.NODE_ENV === "production" || app.use(morgan("dev"));
 
 const proxyOptions = {
   target: FHIR_SERVER_BASE,
