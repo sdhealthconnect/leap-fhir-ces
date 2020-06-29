@@ -8,7 +8,7 @@
   "link": [
     {
       "relation": "self",
-      "url": "https://mock-fhir-server/base4/Patient?_pretty=true"
+      "url": "https://mock-fhir-server/base4/MedicationStatement?_pretty=true"
     },
     {
       "relation": "next",
@@ -124,7 +124,7 @@
         "effectiveDateTime": "2015-01-23",
         "dateAsserted": "2015-02-22",
         "informationSource": {
-          "reference": "Patient/pat1",
+          "reference": "Patient/1",
           "display": "Donald Duck"
         },
         "derivedFrom": [
@@ -323,7 +323,7 @@
         "effectiveDateTime": "2015-01-23",
         "dateAsserted": "2015-02-22",
         "informationSource": {
-          "reference": "Patient/pat1",
+          "reference": "Patient/2",
           "display": "Donald Duck"
         },
         "derivedFrom": [
@@ -420,6 +420,14 @@
       "resource": {
         "resourceType": "MedicationStatement",
         "id": "3",
+        "meta": {
+          "security": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/v3-Confidentiality",
+              "code": "R"
+            }
+          ]
+        },
         "contained": [
           {
             "resourceType": "Medication",
@@ -523,7 +531,7 @@
         "effectiveDateTime": "2015-01-23",
         "dateAsserted": "2015-02-22",
         "informationSource": {
-          "reference": "Patient/pat1",
+          "reference": "Patient/1",
           "display": "Donald Duck"
         },
         "derivedFrom": [

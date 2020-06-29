@@ -1,6 +1,7 @@
 const nock = require("nock");
 const request = require("supertest");
 const app = require("../app");
+const _ = require("lodash");
 
 const FHIR_SERVER_BASE =
   process.env.FHIR_SERVER_BASE || "https://mock-fhir-server/base";
@@ -54,7 +55,23 @@ const CDS_DENY_RESPONSE = {
       },
       extension: {
         decision: "CONSENT_DENY",
-        obligations: []
+        obligations: [
+          {
+            id: {
+              system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+              code: "REDACT"
+            },
+            parameters: {
+              codes: [
+                {
+                  system:
+                    "http://terminology.hl7.org/CodeSystem/v3-Confidentiality",
+                  code: "R"
+                }
+              ]
+            }
+          }
+        ]
       }
     }
   ]
@@ -77,7 +94,12 @@ afterEach(() => {
 it("should fetch a resource if consent permits", async () => {
   expect.assertions(2);
   const patient = require("./fixtures/patient.json");
-  const medication = require("./fixtures/medication-statement.json");
+
+  const medication = _.cloneDeep(
+    require("./fixtures/medication-statement.json")
+  );
+  medication.meta = undefined;
+
   MOCK_FHIR_SERVER.get("/Patient/1").reply(200, patient);
   MOCK_FHIR_SERVER.get("/MedicationStatement/1").reply(200, medication);
 
@@ -107,8 +129,24 @@ it("should send 403 if consent denies", async () => {
   expect(res.status).toEqual(403);
 });
 
-it("should fetch a bundle and return only the resources which the consent permits", async () => {
-  expect.assertions(2);
+it("should send 403 if consent obligation requires redaction", async () => {
+  expect.assertions(1);
+  const patient = require("./fixtures/patient.json");
+  const medication = require("./fixtures/medication-statement.json");
+  MOCK_FHIR_SERVER.get("/Patient/1").reply(200, patient);
+  MOCK_FHIR_SERVER.get("/MedicationStatement/1").reply(200, medication);
+
+  MOCK_CDS.post(CDS_ENDPOINT).reply(200, CDS_PERMIT_RESPONSE);
+
+  const res = await request(app)
+    .get("/MedicationStatement/1")
+    .set("content-type", "application/json");
+
+  expect(res.status).toEqual(403);
+});
+
+it("should fetch a bundle and return only the resources which the consent permits and not to be redacted", async () => {
+  expect.assertions(3);
   const patient1 = require("./fixtures/patient.json");
   const patient2 = require("./fixtures/patient-second.json");
   const medicationBundle = require("./fixtures/medication-statement-bundle.json");
@@ -124,5 +162,6 @@ it("should fetch a bundle and return only the resources which the consent permit
     .set("content-type", "application/json");
 
   expect(res.status).toEqual(200);
-  expect(res.body.entry.length).toEqual(2);
+  expect(res.body.entry.length).toEqual(1);
+  expect(res.body.entry[0].resource.id).toEqual("1");
 });
