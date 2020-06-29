@@ -1,6 +1,14 @@
 {
   "resourceType": "MedicationStatement",
   "id": "example001",
+  "meta": {
+    "security": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-Confidentiality",
+        "code": "R"
+      }
+    ]
+  },
   "contained": [
     {
       "resourceType": "Medication",
