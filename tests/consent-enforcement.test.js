@@ -54,7 +54,23 @@ const CDS_DENY_RESPONSE = {
       },
       extension: {
         decision: "CONSENT_DENY",
-        obligations: []
+        obligations: [
+          {
+            id: {
+              system: "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+              code: "REDACT"
+            },
+            parameters: {
+              codes: [
+                {
+                  system:
+                    "http://terminology.hl7.org/CodeSystem/v3-Confidentiality",
+                  code: "R"
+                }
+              ]
+            }
+          }
+        ]
       }
     }
   ]
@@ -107,8 +123,8 @@ it("should send 403 if consent denies", async () => {
   expect(res.status).toEqual(403);
 });
 
-it("should fetch a bundle and return only the resources which the consent permits", async () => {
-  expect.assertions(2);
+it("should fetch a bundle and return only the resources which the consent permits and not to be redacted", async () => {
+  expect.assertions(3);
   const patient1 = require("./fixtures/patient.json");
   const patient2 = require("./fixtures/patient-second.json");
   const medicationBundle = require("./fixtures/medication-statement-bundle.json");
@@ -124,5 +140,6 @@ it("should fetch a bundle and return only the resources which the consent permit
     .set("content-type", "application/json");
 
   expect(res.status).toEqual(200);
-  expect(res.body.entry.length).toEqual(2);
+  expect(res.body.entry.length).toEqual(1);
+  expect(res.body.entry[0].resource.id).toEqual("1");
 });
