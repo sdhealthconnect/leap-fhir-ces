@@ -1,0 +1,13 @@
+steps:
+    - name: node:12
+      entrypoint: yarn
+      args: ['install']
+    - name: "gcr.io/cloud-builders/yarn"
+      args: ["create-env"]
+      env:
+        - "FHIR_SERVER_BASE=${_FHIR_SERVER_BASE}"
+        - "UNPROTECTED_RESOURCE_TYPES=${_UNPROTECTED_RESOURCE_TYPES}"
+        - "CDS_HOST=${_CDS_HOST}"
+    - name: "gcr.io/cloud-builders/gcloud"
+      args: ["app", "deploy"]
+  timeout: "1600s"
