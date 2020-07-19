@@ -1,7 +1,10 @@
+const path = require("path");
+const fs = require("fs");
 const nock = require("nock");
 const request = require("supertest");
 const app = require("../app");
 const _ = require("lodash");
+const jwt = require("jsonwebtoken");
 
 const FHIR_SERVER_BASE =
   process.env.FHIR_SERVER_BASE || "https://mock-fhir-server/base";
@@ -77,6 +80,22 @@ const CDS_DENY_RESPONSE = {
   ]
 };
 
+const privateKey = fs.readFileSync(
+  path.resolve(__dirname, "./fixtures/test-private-key.pem")
+);
+
+const JWT = jwt.sign(
+  {
+    actor: {
+      system: "urn:ietf:rfc:3986",
+      value: "2.16.840.1.113883.20.5"
+    },
+    pou: "TREAT"
+  },
+  privateKey,
+  { algorithm: "RS512" }
+);
+
 const MOCK_FHIR_SERVER = nock(FHIR_SERVER_BASE)
   .defaultReplyHeaders({ "Content-Type": "application/json; charset=utf-8" })
   .replyContentLength();
@@ -107,7 +126,8 @@ it("should fetch a resource if consent permits", async () => {
 
   const res = await request(app)
     .get("/MedicationStatement/1")
-    .set("content-type", "application/json");
+    .set("content-type", "application/json")
+    .set("Authorization", `Bearer ${JWT}`);
 
   expect(res.status).toEqual(200);
   expect(res.body).toEqual(medication);
@@ -124,7 +144,8 @@ it("should send 403 if consent denies", async () => {
 
   const res = await request(app)
     .get("/MedicationStatement/1")
-    .set("content-type", "application/json");
+    .set("content-type", "application/json")
+    .set("Authorization", `Bearer ${JWT}`);
 
   expect(res.status).toEqual(403);
 });
@@ -140,7 +161,8 @@ it("should send 403 if consent obligation requires redaction", async () => {
 
   const res = await request(app)
     .get("/MedicationStatement/1")
-    .set("content-type", "application/json");
+    .set("content-type", "application/json")
+    .set("Authorization", `Bearer ${JWT}`);
 
   expect(res.status).toEqual(403);
 });
@@ -159,7 +181,8 @@ it("should fetch a bundle and return only the resources which the consent permit
 
   const res = await request(app)
     .get("/MedicationStatement")
-    .set("content-type", "application/json");
+    .set("content-type", "application/json")
+    .set("Authorization", `Bearer ${JWT}`);
 
   expect(res.status).toEqual(200);
   expect(res.body.entry.length).toEqual(1);
