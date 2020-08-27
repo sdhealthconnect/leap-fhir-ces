@@ -8,6 +8,7 @@ steps:
       - "FHIR_SERVER_BASE=${_FHIR_SERVER_BASE}"
       - "UNPROTECTED_RESOURCE_TYPES=${_UNPROTECTED_RESOURCE_TYPES}"
       - "CDS_HOST=${_CDS_HOST}"
+      - "JWT_PUBLIC_KEY=${_JWT_PUBLIC_KEY}"
   - name: "gcr.io/cloud-builders/gcloud"
     args: ["app", "deploy"]
 timeout: "1600s"
