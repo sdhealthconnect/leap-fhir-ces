@@ -424,7 +424,8 @@
           "security": [
             {
               "system": "http://terminology.hl7.org/CodeSystem/v3-Confidentiality",
-              "code": "R"
+              "code": "R",
+              "display": "Restricted"
             }
           ]
         },
