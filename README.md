@@ -1,5 +1,7 @@
 # LEAP FHIR Proxy CES Demo
-LEAP FHIR Proxy Consent Enforcement Point (CES) provides a demonstration of consent enforcement in FHIR transactions. The web application is implemented as a reverse proxy monitoring the incoming requests and outgoing response to/from a FHIR server. 
+LEAP FHIR Proxy Consent Enforcement Point (CES) provides a demonstration of consent enforcement in FHIR transactions. As shown in the below diagram, the web application is implemented as a reverse proxy monitoring the incoming requests and outgoing response to/from a FHIR server. 
+
+![Proxy CES](docs/assets/proxy.png?raw=true)
 
 For every resource being released in the response, the CES pursues the following steps: 
 
