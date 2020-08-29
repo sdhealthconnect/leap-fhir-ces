@@ -29,6 +29,31 @@ An instance of this service is deployed at [https://leap-fhir-ces.appspot.com](h
 
 The trusted public key for this service and the corresponding test private key are provided [here](https://github.com/sdhealthconnect/leap-fhir-ces/tree/master/tests/fixtures). You can use this private key to sign your JWTs when communicating with this server.
 
+### Quick Demo
+You can use the following JWT agains the demo server at [https://leap-fhir-ces.appspot.com](https://leap-fhir-ces.appspot.com/).
+```
+eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJhY3RvciI6eyJzeXN0ZW0iOiJ1cm46aWV0ZjpyZmM6Mzk4NiIsInZhbHVlIjoidXJuOm9pZDoxLjEifSwicG91IjoiVFJFQVQiLCJpYXQiOjE1OTg1NjIzMjF9.NXaOuOhyX0YHqqX97kgCztYGYHJ3gsNF1gMk9AMSSoi9cMnurZCbNwGswr5OG5AdYKmeQmN5LvSyqY-giZN2Eyj2E5PQqerIVrm7W1VAl7JtUghvpukepPQ6nyO4orzZXDdsCfy8XFEbhLzlEQk0w4CRiRcYOtGK4-xDQHn0ALxYYAdxZicJCCMsQlJkDgRDOMi4bC4OAcnR7D-zbSDt1hoVk4NRMqSyIlFC39XucrsZZ5iOsdU5GbQpmOKbjeUAr42Y20jT-leUFw7CY17TY3CjSwyiTbvLeqVmoiihvEu7rxu3Sw52nfd80qN2YDZbi-7_aVDV8OlUutGZIKmvMg
+```
+which includes the following attributes and is signed by the demo private key.
+```json
+{
+  "actor": {
+    "system": "urn:ietf:rfc:3986",
+    "value": "urn:oid:1.1"
+  },
+  "pou": "TREAT"
+}
+```
+
+To run a quick test, send the following requests for a list of medication statements from the original FHIR server and the CES proxy:
+```
+GET http://34.94.253.50:8080/hapi-fhir-jpaserver/fhir/MedicationStatement
+
+GET https://leap-fhir-ces.appspot.com/MedicationStatement
+```
+
+You can verify that the response from the CES Proxy does not include the `MedicateStatement` resource labeled as `Restricted`. This is because [the applicable patient consent](http://34.94.253.50:8080/hapi-fhir-jpaserver/fhir/Consent/105) includes a provision that does not permit sharing restricted resources with this actor.
+
 
 ## Local Setup
 The following parameters need to be set as environment variables:
