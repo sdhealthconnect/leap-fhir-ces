@@ -52,7 +52,7 @@ GET http://34.94.253.50:8080/hapi-fhir-jpaserver/fhir/MedicationStatement
 GET https://leap-fhir-ces.appspot.com/MedicationStatement
 ```
 
-You can verify that the response from the CES Proxy does not include the MedicateStatement resource labeled as `Restricted`. This is because [the applicable patient consent](http://34.94.253.50:8080/hapi-fhir-jpaserver/fhir/Consent/105) includes a provision that does not permit sharing restricted resources with this actor.
+You can verify that the response from the CES Proxy does not include the `MedicateStatement` resource labeled as `Restricted`. This is because [the applicable patient consent](http://34.94.253.50:8080/hapi-fhir-jpaserver/fhir/Consent/105) includes a provision that does not permit sharing restricted resources with this actor.
 
 
 ## Local Setup
