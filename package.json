@@ -24,5 +24,6 @@
     "jest": "^27.0.6",
     "nock": "^13.1.1",
     "supertest": "^6.1.5"
-  }
+  },
+  "packageManager": "yarn@3.4.1"
 }
