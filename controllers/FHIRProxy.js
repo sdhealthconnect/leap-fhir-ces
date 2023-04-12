@@ -1,4 +1,3 @@
-const _ = require("lodash");
 const logger = require("../lib/logger");
 
 const ConsentEnforcementService = require("../lib/ConsentEnforcementService");
