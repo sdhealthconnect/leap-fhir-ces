@@ -11,6 +11,7 @@ const FHIR_SERVER_BASE =
 
 const CDS_HOST = process.env.CDS_HOST || "https://mock-cds";
 const CDS_ENDPOINT = "/cds-services/patient-consent-consult";
+const SLS_ENDPOINT = "/sls";
 
 const CDS_PERMIT_RESPONSE = {
   cards: [
@@ -155,6 +156,7 @@ it("should fetch a resource if consent permits", async () => {
   MOCK_FHIR_SERVER.get("/Patient/1").reply(200, patient);
   MOCK_FHIR_SERVER.get("/MedicationStatement/1").reply(200, medication);
 
+  MOCK_CDS.post(SLS_ENDPOINT).reply(200, medication);
   MOCK_CDS.post(CDS_ENDPOINT).reply(200, CDS_PERMIT_RESPONSE);
 
   const res = await request(app)
@@ -166,13 +168,14 @@ it("should fetch a resource if consent permits", async () => {
   expect(res.body).toEqual(medication);
 });
 
-it("should send 403 if consent denies", async () => {
+it("should send 404 if consent denies", async () => {
   expect.assertions(1);
   const patient = require("./fixtures/patient.json");
   const medication = require("./fixtures/medication-statement.json");
   MOCK_FHIR_SERVER.get("/Patient/1").reply(200, patient);
   MOCK_FHIR_SERVER.get("/MedicationStatement/1").reply(200, medication);
 
+  MOCK_CDS.post(SLS_ENDPOINT).reply(200, medication);
   MOCK_CDS.post(CDS_ENDPOINT).reply(200, CDS_DENY_RESPONSE);
 
   const res = await request(app)
@@ -180,16 +183,17 @@ it("should send 403 if consent denies", async () => {
     .set("content-type", "application/json")
     .set("Authorization", `Bearer ${JWT}`);
 
-  expect(res.status).toEqual(403);
+  expect(res.status).toEqual(404);
 });
 
-it("should send 403 if consent obligation requires redaction", async () => {
+it("should send 404 if consent obligation requires redaction", async () => {
   expect.assertions(1);
   const patient = require("./fixtures/patient.json");
   const medication = require("./fixtures/medication-statement.json");
   MOCK_FHIR_SERVER.get("/Patient/1").reply(200, patient);
   MOCK_FHIR_SERVER.get("/MedicationStatement/1").reply(200, medication);
 
+  MOCK_CDS.post(SLS_ENDPOINT).reply(200, medication);
   MOCK_CDS.post(CDS_ENDPOINT).reply(200, CDS_PERMIT_RESPONSE);
 
   const res = await request(app)
@@ -197,7 +201,7 @@ it("should send 403 if consent obligation requires redaction", async () => {
     .set("content-type", "application/json")
     .set("Authorization", `Bearer ${JWT}`);
 
-  expect(res.status).toEqual(403);
+  expect(res.status).toEqual(404);
 });
 
 it("should fetch a bundle and return only the resources which the consent permits and not to be redacted", async () => {
@@ -209,6 +213,7 @@ it("should fetch a bundle and return only the resources which the consent permit
   MOCK_FHIR_SERVER.get("/Patient/2").reply(200, patient2);
   MOCK_FHIR_SERVER.get("/MedicationStatement").reply(200, medicationBundle);
 
+  MOCK_CDS.post(SLS_ENDPOINT).reply(200, medicationBundle);
   MOCK_CDS.post(CDS_ENDPOINT).reply(200, CDS_PERMIT_RESPONSE);
   MOCK_CDS.post(CDS_ENDPOINT).reply(200, CDS_DENY_RESPONSE);
 
@@ -231,6 +236,7 @@ it("should fetch a bundle and return only the resources which the consent permit
   MOCK_FHIR_SERVER.get("/Patient/2").reply(200, patient2);
   MOCK_FHIR_SERVER.get("/MedicationStatement").reply(200, medicationBundle);
 
+  MOCK_CDS.post(SLS_ENDPOINT).reply(200, medicationBundle);
   MOCK_CDS.post(CDS_ENDPOINT).reply(
     200,
     CDS_PERMIT_RESPONSE_CONTENT_CLASS_OBLIGATION
