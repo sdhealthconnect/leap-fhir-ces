@@ -25,5 +25,9 @@
     "nock": "^13.3.0",
     "supertest": "^6.3.3"
   },
-  "packageManager": "yarn@3.4.1"
+  "packageManager": "yarn@3.4.1",
+  "engines": {
+    "yarn": "^3.4.1",
+    "node": "16"
+  }
 }
