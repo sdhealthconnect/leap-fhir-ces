@@ -16,6 +16,7 @@ async function onProxyReq(proxyReq, req, res) {
     ? PROXY_PATH_PREFIX + req.adjustedPath
     : proxyReq.path;
   logger.info(`proxy -> backend: was: ${oldPath}, is: ${proxyReq.path}`);
+  proxyReq.setHeader("Authorization", "");
 }
 
 async function onProxyRes(proxyRes, req, res) {
@@ -59,10 +60,11 @@ async function processResponse(rawBackendBody, proxyRes, req, res) {
         proxyRes.headers
       );
 
-      const modifiedResponse = await ConsentEnforcementService.processFHIRResponse(
-        req,
-        parsedBackendResponse
-      );
+      const modifiedResponse =
+        await ConsentEnforcementService.processFHIRResponse(
+          req,
+          parsedBackendResponse
+        );
       ResponseUtils.sendJsonResponse(
         res,
         proxyRes.headers,
