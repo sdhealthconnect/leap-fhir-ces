@@ -28,6 +28,6 @@
   "packageManager": "yarn@3.4.1",
   "engines": {
     "yarn": "^3.4.1",
-    "node": "16"
+    "node": "18"
   }
 }
