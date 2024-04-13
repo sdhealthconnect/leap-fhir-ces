@@ -16,8 +16,10 @@ process.env.NODE_ENV === "production" || app.use(morgan("dev"));
 
 const proxyOptions = {
   target: FHIR_SERVER_BASE,
-  onProxyRes: FHIRProxy.onProxyRes,
-  onProxyReq: FHIRProxy.onProxyReq,
+  on: {
+    proxyRes: FHIRProxy.onProxyRes,
+    proxyReq: FHIRProxy.onProxyReq
+  },
   xfwd: true,
   changeOrigin: true,
   selfHandleResponse: true
