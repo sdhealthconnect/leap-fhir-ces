@@ -23,7 +23,7 @@
   "devDependencies": {
     "jest": "^29.7.0",
     "nock": "^13.5.4",
-    "supertest": "^6.3.4"
+    "supertest": "^7.0.0"
   },
   "packageManager": "yarn@3.4.1",
   "engines": {
